@@ -12,9 +12,7 @@ function parse () {
 				console.log(request.responseText);
 				message = JSON.parse(request.responseText);
 				elem = document.getElementById("messages");
-				for (count = 0; count <= message.length; count++) {
-						elem.innerHTML += "<div id = 'message'>" + message[count]["username"] + " : " + message[count]["content"] + "</div>";
-				}
+				elem.innerHTML = message["username"] + " : " + message["content"];
 		}		
 	};
 	//step 3
