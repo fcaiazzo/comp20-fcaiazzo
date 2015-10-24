@@ -1,1 +1,18 @@
-/* Your CSS here... */
+h1 {
+	font-family: courier;
+	font-style: bold;
+}
+
+#message {
+	color: #99CCFF;
+	font-family: courier;
+	background-color: #343434;
+	border-radius: 25px;
+	border: 3px solid #1E1E1D;
+	padding: 10px;
+	margin: 10px;
+}
+
+#name {
+	font-style: bold;
+}
