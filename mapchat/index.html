@@ -11,6 +11,7 @@
 	</head>
 
 	<script> 
+		
 		var myLat = 0; 
 		var myLong = 0; 
 		var me = new google.maps.LatLng(myLat, myLong);
@@ -34,7 +35,7 @@
 				// does your browser support the geolocation object? 
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(function(position) {
-						myLat = position.coords.longitude; 
+						myLat = position.coords.latitude; 
 						myLong = position.coords.longitude; 
 						renderMap(); 
 					});
