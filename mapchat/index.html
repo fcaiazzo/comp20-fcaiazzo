@@ -1,69 +1,77 @@
-<!DOCTYPE html> 
-<html> 
-		<head>
-				<title> Map Chat </title>
-				<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-				<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
-				<link rel="stylesheet" href="mapchat_style.css" />
-		</head>
+<!DOCTYPE html>
 
-		<script>
-			var myLat = 0;
-			var myLng = 0;
-			var request = new XMLHttpRequest();
-			var me = new google.maps.LatLng(myLat, myLng);
-			var myOptions = {
-						zoom: 13, // The larger the zoom number, the bigger the zoom
-						center: me,
-						mapTypeId: google.maps.MapTypeId.ROADMAP
-					};
-			var map;
-			var marker;
-			var infowindow = new google.maps.InfoWindow();
-			
-			function init()
-			{
-				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+<html> 
+
+	<head> 
+		<title>MapChat</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		 <meta charset="utf-8">
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+<!-- 		<link rel="stylesheet" href="map-chat.css" /> -->
+	</head>
+
+	<script> 
+		var myLat = 0; 
+		var myLong = 0; 
+		var request = new XMLHttpRequest(); 
+		var me = new google.maps.LatLng(myLat, myLong);
+		var myAppearance = {
+				zoom: 13,
+				center: me, 
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+		var map;
+		var marker; 
+		var infowindow = new google.maps.InfoWindow();
+
+		function init() {
+				map = new google.maps.Map(document.getElementById("map_canvas"), myAppearance);
 				getMyLocation();
-			}
-			
-			function getMyLocation() {
-				if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+		}
+
+		function getMyLocation() {
+				
+				// does your browser support the geolocation object? 
+				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(function(position) {
-						myLat = position.coords.latitude;
-						myLng = position.coords.longitude;
-						renderMap();
+						
+						myLat = position.coords.latitude; 
+						console.log(myLat);
+						myLong = position.coords.longitude; 
+						console.log(myLong);
+						renderMap(); 
 					});
 				}
+
 				else {
-					alert("Geolocation is not supported by your web browser.  What a shame!");
+					alert("Your web browser doesn't support geolocation!");
 				}
-			}
-			function renderMap()
-			{
-				me = new google.maps.LatLng(myLat, myLng);
-				
-				// Update map and go there...
-				map.panTo(me);
-	
-				// Create a marker
-				marker = new google.maps.Marker({
-					position: me,
-					title: "Here I Am!"
-				});
-				marker.setMap(map);
-					
-				// Open info window on click of marker
-				google.maps.event.addListener(marker, 'click', function() {
+		}
+
+		function renderMap() {
+
+			me = new google.maps.LatLng(myLat, myLong);
+
+			map.panTo(me);
+
+			marker = new google.maps.Marker({
+				position: me,
+				title: "Frankie is here!"
+			});
+
+			marker.setMap(map);
+
+			google.maps.event.addListener(marker, 'click', function() {
 					infowindow.setContent(marker.title);
 					infowindow.open(map, marker);
-				});
-			}
-		</script>
-	</head>
-	
+			});
+		}
+
+	</script> 
+
 	<body onload="init()">
 		<div id="map_canvas"></div>
 	</body>
 
-</html>
+</html> 
