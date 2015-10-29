@@ -47,8 +47,17 @@
 		}
 
 		var request = new XMLHttpRequest(); 
+		var myMessage = "hi friends"
 		request.open("POST", "https://secret-about-box.herokuapp.com/sendLocation", true);
-		request.send("login=PatFitzgerald&lat=myLat&lng=myLong&message=hi");
+
+		request.onreadystatechange = function() {
+			if (request.readyState == 4 && request.status == 200) {
+				console.log("got data back");
+				data = request.responseText; 
+				console.log(data);
+			}
+		};
+		request.send("login=PatFitzgerald&lat=myLat&lng=myLong&message=myMessage");
 
 		function renderMap() {
 
