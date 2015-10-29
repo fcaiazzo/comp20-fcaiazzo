@@ -52,6 +52,7 @@
 		function getData() {
 			var request = new XMLHttpRequest(); 		
 			var myMessage = "hi friends";
+			var login = "PatFitzgerald";
 			var url = "https://secret-about-box.herokuapp.com/sendLocation";
 		
 			request.open("POST", url, true);
@@ -67,7 +68,8 @@
 		
 			console.log(myLat);
 			console.log(myLong);		
-			request.onload.send("login=" + "PatFitzgerald" + "&lat=" + myLat + "&lng="+ myLong + "message=" + "hi");
+
+			request.send("login=" + login + "&lat=" + myLat + "&lng="+ myLong + "message=" + myMessage);
 		}
 		
 		function renderMap() {
