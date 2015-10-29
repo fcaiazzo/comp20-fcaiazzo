@@ -34,7 +34,6 @@
 				// does your browser support the geolocation object? 
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(function(position) {
-						console.log(myLat);
 						myLat = position.coords.longitude; 
 						myLong = position.coords.longitude; 
 						renderMap(); 
