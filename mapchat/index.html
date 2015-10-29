@@ -13,7 +13,6 @@
 	<script> 
 		var myLat = 0; 
 		var myLong = 0; 
-		var request = new XMLHttpRequest(); 
 		var me = new google.maps.LatLng(myLat, myLong);
 		var myAppearance = {
 				zoom: 13,
@@ -35,11 +34,9 @@
 				// does your browser support the geolocation object? 
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(function(position) {
-						
-						myLat = position.coords.latitude; 
 						console.log(myLat);
+						myLat = position.coords.longitude; 
 						myLong = position.coords.longitude; 
-						console.log(myLong);
 						renderMap(); 
 					});
 				}
@@ -48,6 +45,10 @@
 					alert("Your web browser doesn't support geolocation!");
 				}
 		}
+
+		var request = new XMLHttpRequest(); 
+		request.open("POST", "https://secret-about-box.herokuapp.com/sendLocation", true);
+		request.send("login=PatFitzgerald&lat=myLat&lng=myLong&message=hi");
 
 		function renderMap() {
 
