@@ -47,8 +47,10 @@
 		}
 
 		var request = new XMLHttpRequest(); 
-		var myMessage = "hi friends"
-		request.open("POST", "https://secret-about-box.herokuapp.com/sendLocation", true);
+		var myMessage = "hi friends";
+		var url = "https://secret-about-box.herokuapp.com/sendLocation";
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		request.open("POST", url, true);
 
 		request.onreadystatechange = function() {
 			if (request.readyState == 4 && request.status == 200) {
