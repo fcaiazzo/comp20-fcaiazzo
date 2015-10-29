@@ -46,13 +46,13 @@
 				}
 		}
 
-		var request = new XMLHttpRequest(); 
-		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		var request = new XMLHttpRequest(); 		
 		var myMessage = "hi friends";
 		var url = "https://secret-about-box.herokuapp.com/sendLocation";
 		
 		request.open("POST", url, true);
-
+		request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	
 		request.onreadystatechange = function() {
 			if (request.readyState == 4 && request.status == 200) {
 				console.log("got data back");
