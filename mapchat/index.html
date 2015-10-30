@@ -84,16 +84,27 @@
 
 					var person = new google.maps.LatLng(locations[i].lat, locations[i].lng); 
 					var distanceFromMe = haversineDistance(locations[i].lat, locations[i].lng, myLat, myLong, true);
-					
+					var personInfo = "<p> Name: " + locations[i].login + "</p> <p> Message: " + locations[i].message + "</p><p> Distance from me: " + distanceFromMe + "</p>"; 
+
 					marker = new google.maps.Marker({
 						position: person,
-						title: locations[i].login
+						title: personInfo
 					});
 
 					marker.setMap(map);
 
 					addMarkerEvent(marker);
 			}
+
+			var me = new google.maps.LatLng(myLat, myLong);
+			map.panTo(me);
+			myMarker = new google.maps.Marker({
+					position: me,
+					title: "PatFitzgerald",
+					icon: "fang.jpg"
+			});
+
+			addMarkerEvent(myMarker);
 		}
 
 		function haversineDistance(lat1, lon1, lat2, lon2, isMiles) {
