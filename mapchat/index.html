@@ -38,8 +38,7 @@
 						myLat = position.coords.latitude; 
 						myLong = position.coords.longitude; 
 						getData(myLat, myLong, function(locations) {
-							console.log("in callback");		
-							renderMap(locations);
+							renderMap(locations, myLat, myLong);
 						});
 						
 					});
@@ -63,10 +62,8 @@
 	
 			request.onreadystatechange = function() {
 				if (request.readyState == 4 && request.status == 200) {
-					console.log("got data back");
 					data = request.responseText; 
 					locations = JSON.parse(data);
-					console.log("sendLocation");
 					callback(locations);
 				}
 			};		
@@ -74,12 +71,20 @@
 			request.send(dataNames);
 		}
 		
-		function renderMap(locations) {
+		function renderMap(locations, myLat, myLong) {
+
+			function addMarkerEvent (marker) {
+					google.maps.event.addListener(marker, 'click', function() {
+							infowindow.setContent(marker.title);
+							infowindow.open(map, marker);
+					});
+			}
 
 			for (var i = 0; i < locations.length; i++) {
 
-					var person = new google.maps.LatLng(locations[i].lat, locations[i].lng);
-
+					var person = new google.maps.LatLng(locations[i].lat, locations[i].lng); 
+					var distanceFromMe = haversineDistance(locations[i].lat, locations[i].lng, myLat, myLong, true);
+					
 					marker = new google.maps.Marker({
 						position: person,
 						title: locations[i].login
@@ -87,12 +92,34 @@
 
 					marker.setMap(map);
 
-					google.maps.event.addListener(marker, 'click', function() {
-							infowindow.setContent(marker.title);
-							infowindow.open(map, marker);
-					});
-				}
+					addMarkerEvent(marker);
 			}
+		}
+
+		function haversineDistance(lat1, lon1, lat2, lon2, isMiles) {
+  				
+  			function toRad(x) {
+    				return x * Math.PI / 180;
+  			}
+
+  			var R = 6371; // km
+
+  			var x1 = lat2 - lat1;
+  			var dLat = toRad(x1);
+  			var x2 = lon2 - lon1;
+  			var dLon = toRad(x2)
+  			var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    	
+    		Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    		Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  			
+  			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  			var d = R * c;
+
+  			if(isMiles) d /= 1.60934;
+
+  			return d;
+		}
 	</script> 
 
 	<body onload="init()">
