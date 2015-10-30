@@ -28,19 +28,20 @@
 		function init() {
 				map = new google.maps.Map(document.getElementById("map_canvas"), myAppearance);
 				getMyLocation();
-				getData();
 		}
 
-		function getMyLocation() {
-				
+		function getMyLocation() {		
 				// does your browser support the geolocation object? 
 				if (navigator.geolocation) {
 					navigator.geolocation.getCurrentPosition(function(position) {
+						
 						myLat = position.coords.latitude; 
 						myLong = position.coords.longitude; 
-						console.log(myLat);
-						console.log(myLong);
-						renderMap(); 
+						getData(myLat, myLong, function(locations) {
+							console.log("in callback");		
+							renderMap(locations);
+						});
+						
 					});
 				}
 
@@ -49,12 +50,14 @@
 				}
 		}
 
-		function getData() {
+		function getData(myLat, myLong, callback) {
+			
 			var request = new XMLHttpRequest(); 		
-			var myMessage = "hi friends";
+			var myMessage = "hi";
 			var login = "PatFitzgerald";
+			var dataNames = "login=" + login + "&lat=" + myLat + "&lng="+ myLong + "&message=" + myMessage;
 			var url = "https://secret-about-box.herokuapp.com/sendLocation";
-		
+
 			request.open("POST", url, true);
 			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
@@ -62,35 +65,34 @@
 				if (request.readyState == 4 && request.status == 200) {
 					console.log("got data back");
 					data = request.responseText; 
-					console.log(data);
+					locations = JSON.parse(data);
+					console.log("sendLocation");
+					callback(locations);
 				}
-			};
-		
-			console.log(myLat);
-			console.log(myLong);		
+			};		
 
-			request.send("login=" + login + "&lat=" + myLat + "&lng="+ myLong + "message=" + myMessage);
+			request.send(dataNames);
 		}
 		
-		function renderMap() {
+		function renderMap(locations) {
 
-			me = new google.maps.LatLng(myLat, myLong);
+			for (var i = 0; i < locations.length; i++) {
 
-			map.panTo(me);
+					var person = new google.maps.LatLng(locations[i].lat, locations[i].lng);
 
-			marker = new google.maps.Marker({
-				position: me,
-				title: "Frankie is here!"
-			});
+					marker = new google.maps.Marker({
+						position: person,
+						title: locations[i].login
+					});
 
-			marker.setMap(map);
+					marker.setMap(map);
 
-			google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(marker.title);
-					infowindow.open(map, marker);
-			});
-		}
-
+					google.maps.event.addListener(marker, 'click', function() {
+							infowindow.setContent(marker.title);
+							infowindow.open(map, marker);
+					});
+				}
+			}
 	</script> 
 
 	<body onload="init()">
