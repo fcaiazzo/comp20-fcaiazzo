@@ -39,11 +39,9 @@
 						myLong = position.coords.longitude; 
 						getData(myLat, myLong, function(locations) {
 							renderMap(locations, myLat, myLong);
-						});
-						
+						});				
 					});
 				}
-
 				else {
 					alert("Your web browser doesn't support geolocation!");
 				}
@@ -84,7 +82,7 @@
 
 					var person = new google.maps.LatLng(locations[i].lat, locations[i].lng); 
 					var distanceFromMe = haversineDistance(locations[i].lat, locations[i].lng, myLat, myLong, true);
-					var personInfo = "<p> Name: " + locations[i].login + "</p> <p> Message: " + locations[i].message + "</p><p> Distance from me: " + distanceFromMe + "</p>"; 
+					var personInfo = "<p> Name: " + locations[i].login + "</p> <p> Message: " + locations[i].message + "</p><p> Distance from me in miles : " + distanceFromMe + "</p>"; 
 
 					marker = new google.maps.Marker({
 						position: person,
