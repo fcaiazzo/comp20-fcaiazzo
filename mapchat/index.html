@@ -52,7 +52,7 @@
 		function getData(myLat, myLong, callback) {
 			
 			var request = new XMLHttpRequest(); 		
-			var myMessage = "hi";
+			var myMessage = encodeURIComponent("Always wishing for chocolate");
 			var login = "PatFitzgerald";
 			var dataNames = "login=" + login + "&lat=" + myLat + "&lng="+ myLong + "&message=" + myMessage;
 			var url = "https://secret-about-box.herokuapp.com/sendLocation";
@@ -107,8 +107,8 @@
 
 			myMarker = new google.maps.Marker({
 					position: me,
-					title: "PatFitzgerald",
-					icon: "chocolate.jpg",
+					title: "<p> PatFitzgerald </p> <p> Message: Always wishing for chocolate </p>",
+					icon: "chocolate.png",
 					map: map
 			});
 
