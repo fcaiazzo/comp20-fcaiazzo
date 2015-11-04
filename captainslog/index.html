@@ -4,9 +4,36 @@
 
 <head>
 	<title>Captain's Log</title>
+	<meta charset="utf-8"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script>
-	  // Your work will be done here...
+
+		
+		function reload() {
+			
+			$("#msg").keypress(function(event) {
+				
+				if (event.which == 13) {
+
+					elem = $("#log");
+					output = " ";
+					
+					for (key in localStorage) {
+						output = output + "<p>" + localStorage[key] + "</p>";
+					}
+					
+					$("elem").html() = output; 
+				}
+			});
+		}
+
+		function store() {
+			txt = $("#msg");
+			localStorage[new Date().getTime()] = txt;
+			reload();
+		}
+
+
 	</script>
 </head>
 
