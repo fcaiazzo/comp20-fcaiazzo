@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<head>
+	<title>Assignment 4: Security</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+	<div class = "header"> 
+		<h1> Security and Privacy Assessment of Client-Side and Server-Side </h1> 
+			<p> <span style = "font-weight:bold">Assessment by:</span> Francesca Caiazzo </p>
+			<p> <span style = "font-weight:bold">Date:</span> December 7, 2015 </p>
+	</div>
+	<hr>
+	<h2> Introduction </h2> 
+		<p> This assesment provides an overview of security and privacy vulnerabilities found in a web application called "Map Chat." "Map Chat" is an application that allows users to log their usernames, location, and a message on a map of the world. The application displays the locations of all other users who have sent their information to the server. This assessment will evaluate the secureness of both the server-side "Map Chat" application and the client-side application. </p>
+	<hr>
+	<h2> Methodology </h2>
+		<p>In order to create a sound assessment, tests were first carried out using a "black box" method, in which I attempted to break or compromise my client's application simply by sending data to the server. After finding a number of vulnerabilities using simply the "curl" command, I examined my client's code to discover any other vulnerabilities missed during "black box" testing. </p>
+	<hr>
+	<h2> Abstract of Findings</h2>
+		<p>The primary faults found with the security of my client's application can be traced to breaking the cardinal rule of COMP 20 with Professor Ming Chow: <span style= "font-weight: bold; color:  red">"Never ever trust user input."</span> Many of the vulnerabilities would be non-issues if, as developers, we could depend on our users to never have malicious intentions. However, unfortunately, people are the worst. My client failed to check for correctness and acceptability of external input. These shortcomings make it extraordinarily easy for an attacker to break the site. All of the vulnerabilities discovered were linked to the server-side framework of the application.</p>
+	<hr>
+	<h2> Issues found </h2>
+		<ul> 
+		  <div class = "bulletpoint">	
+			<li class = "issue">Cross-Site Scripting</li>
+				<ul>
+					<li>Impacts the GET API</li>
+					<li>Severity: <span style = "color: #B00000; font-weight: bold">High</span> </li>
+					<li>My client's site does not account for a user who is attempting to insert malicious content into HTML or Javascript of their page. For example, an attacker might choose to redirect the checkins page to a malware site (or simply somewhere for their own amusement...). I confirmed my suspicion that XSS would be possible by running the following curl command: <div class = "code"> curl --data "login=PatFitzgerald&lat=75&lng=60&message=&lt;meta http-equiv='refresh' content='0; url=	&#39;http://www.isitajewishholidaytoday.com/&#39;&gt;&#34; http://shielded-journey-5174.herokuapp.com/sendLocation </div>. Not only can an attacker redirect the page altogether, there is also a potential to insert images or other content directly into the checkins page (as seen below).</li>
+					<li>The issue can be avoided by escaping user data before inserting it into a database. My client needs to filter out characters that should not be allowed in a database submission. There are many characters that may cue an injection into a database field, such as the "&lt;" character. You can retroactively apply escaping to the database fields.</li>
+				</ul>
+		  </div>	
+		  <div class = "screenshot">
+		  	<img src= "screenshot1.png" alt = "XSS screenshot1">
+		  	<img src= "screenshot3.png" alt = "XSS screenshot2">
+		  </div>
+		  <div class = "bulletpoint">
+			<li class = "issue">Allows posting of invalid parameters</li>
+				<ul>
+					<li>Impacts the POST API and the client-side application</li>
+					<li>Severity: <span style = "color: #B00000; font-weight: bold">High</span></li>
+					<li>My client's site does not do any checking to make sure that users are inserting the proper kind of data into a field. For example, the latitude and longitude fields should only allow for insertions of numbers. However, I was able to post data to the Mongo database that contained strings in these fields by running the following curl command: <div class = "code">  curl --data "login=PatFitzgerald&lat=hey&lng=friends&message=Hello World" https://shielded-journey-5174.herokuapp.com/sendLocation </div>. The screenshot below shows the MongoLab document in which I inserted strings into the latitude and longitude fields of the document. Allowing the posting of invalid parameters on the server-side would break the client-side application.</li>
+					<li>While my client does perform some tests to make sure that the user is only inserting data into the allowable fields, they don't check to make sure that the data is of the proper format. This security vulnerability could have been prevented by performing a simple check. One incredibly easy way to do this is simply to check if the data in the fields of lat and lng were NaN.</li>
+				</ul>
+		  </div>
+		  <div class = "screenshot">
+		  	<img src= "screenshot2.png" alt = "invalid parameters screenshot">
+		  </div>
+		  <div class = "bulletpoint">
+			<li class = "issue">No limit on how many times one individual can post to the application </li>
+				<ul>
+					<li>Impacts the POST API and the database </li>
+					<li>Severity: <span style = "color: #B00000; font-weight: bold">High</span></li>
+					<li>After performing static manual analysis of my client's code, I determined that my client's site has no limitations on how many times one user can post to the application. This flaw opens the application up to a huge degree of vulnerability. I hypothesize that an attacker, if malicious enough, could post to the application enough times to create a number of undesirable effects. One possibility is that the attacked could post so many times as to fill up the database, or cause the client to incur an unexpected charge for increasing the size of their Mongo Databaes. It also is possible that the performance of the application could change.</li>
+					<li>There are a number of ways that someone could prevent this vulnerability. One potential fix to the problem would be to cap the number of times that someone can post from the same IP address. Alternately, one could periodically clear the database to prevent it from overfilling. </li>
+				</ul>
+		  </div>
+		</ul>
+	<hr>
+	<h2> Conclusion </h2>
+		<p>The assessment yielded several crucial security vulnerabilities. If an attacker wanted to exploit these weaknesses, it would be wholly possible to make the "Map Chat" application totally unusable, both on the client-side and the server-side. While many of the above discussed vulnerabilities can be fixed quite simply, there are overarching weaknesses to the way that this application was built. Allowing anyone to post to the server without authentication will never be a particularly secure way of building an application. </p>
+	<hr>
+	<h2> Acknowledgements </h2>
+		<p>Thanks to Gabe Joseph for an excellent example and some nice style inspiration!</p>
+
+</body>
